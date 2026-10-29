@@ -1,28 +1,35 @@
 name: Testes com Robot Custas Eproc 1G
 
-on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
-  workflow_dispatch:
+on: [push]
 
 jobs:
+
   test:
-    name: Executar Testes Robot
-    runs-on: self-hosted
+
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout do repositório
-        uses: actions/checkout@v4
 
-      - name: Executar Testes Eproc 1G
-        run: |
-          robot -d reports robot_tests/login1g.robot
+    - name: Checkout
 
-      - name: Salvar Relatórios de Teste (Artifact)
-        uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: robot-reports
-          path: reports
+      uses: actions/checkout@v2
+
+    - name: Robot Framework
+
+      uses: joonvena/robotframework-docker-action@v1.0
+
+      with:
+
+        robot_reports_dir: 'reports'
+
+    - name: Upload test results
+
+      uses: actions/upload-artifact@v4
+
+      if: always()
+
+      with:
+
+        name: robot-reports
+
+        path: reports
